@@ -1,20 +1,67 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import CreateToDo from './src/pages/CreateToDo';
+import Home from './src/pages/Home'
+import React from 'react';
+
+import { useState } from 'react';
+import { ToDoContext } from './src/context/ToDoContext';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+
+import { Ionicons } from '@expo/vector-icons';
+
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen 
+        name="Home" 
+        component={Home} 
+        options={{
+			headerStyle: {
+				backgroundColor: 'rgba(30,30,30,255)',
+			},
+			headerTintColor: 'white',
+			tabBarStyle: {
+				backgroundColor: 'rgba(30,30,30,255)'
+			},
+			tabBarLabel: 'Home',
+			tabBarIcon: ({ color, size }) => (
+				<Ionicons name="home" color={color} size={size} />
+			),
+        }}
+      />
+      <Tab.Screen 
+        name=" Criar To Do" 
+        component={CreateToDo}
+        options={{
+			headerStyle: {
+				backgroundColor: 'rgba(30,30,30,255)',
+			},
+			headerTintColor: 'white',
+			tabBarStyle: {
+				backgroundColor: 'rgba(30,30,30,255)'
+			},
+			tabBarLabel: 'Add To Do',
+			tabBarIcon: ({ color }) => (
+				<Ionicons name="add" color={color} size={32} />
+			),
+        }}
+      />
+    </Tab.Navigator>
+  );
+} 
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	const [data, setData] = useState([]) 
+
+	return (
+		<ToDoContext.Provider value={{data, setData}}>
+			<NavigationContainer>
+				<MyTabs/>
+			</NavigationContainer>
+		</ToDoContext.Provider>
+	);
+}
