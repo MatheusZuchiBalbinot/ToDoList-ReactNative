@@ -21,7 +21,7 @@ export default function CreatingToDo() {
     const [initialDate, setInitialDate] = useState(new Date());
     const [initialMode, setInitialMode] = useState('date');
     const [initialShow, setInitialShow] = useState(false);
-    const [initialText, setInitialText] = useState();
+    const [initialText, setInitialText] = useState('');
 
     const InitialOnChange = (event, initialSelectedDate) => {
         const initialCurrentDate = initialSelectedDate || initialDate;
@@ -42,21 +42,21 @@ export default function CreatingToDo() {
 
     const handleSubmit = () => {
         if(title != '' && description != '' && initialText != '') {
-            setData([...data, {title, description, date: initialText}])
-            console.log(data) 
-            // It's working
+            setData([...data, {title, description, initialText, isFavourite: false}])
             setTitle('')
             setDescription('')
             setInitialText('')
         }
-       console.log('algo está vazio')
+        else {
+            alert('Por favor, preencha todos os campos')
+        }
     }
 
     return (
         <View style={styles.content}> 
             <LinearGradient
                 style={{borderRadius: 10}}
-                colors={['#000000', '#090909', '#111111', '#171717', '#1c1c1c']}>
+                colors={['#000000', '#090909']}>
                     <View style={styles.ToDoForm}>
                         <Text style={styles.mainTitle}>Crie uma Tarefa</Text>
                         <View style={{width: '100%'}}>
@@ -66,9 +66,9 @@ export default function CreatingToDo() {
                                 
                                 <TextInput
                                     style={styles.ToDoInput}
-                                    placeholderTextColor='white'
+                                    placeholderTextColor='gray'
                                     color = 'white'
-                                    placeholder='Digite uma Tarefa: ' 
+                                    placeholder='Ex: Capinar o Lote de Vovó' 
                                     onChangeText={(title) => setTitle(title)}
                                     value={title}
                                 />
@@ -78,9 +78,10 @@ export default function CreatingToDo() {
                                 <AntDesign name="infocirlceo" style={{padding: 7}} size={24} color="white" />
                                 <TextInput
                                     style={styles.ToDoInput}
-                                    placeholderTextColor='white'
+                                    placeholderTextColor='gray'
+                                    plac
                                     color = 'white'
-                                    placeholder='Digite uma descrição: ' 
+                                    placeholder='Ex: Capinar 1/4 do lote de Vovó' 
                                     onChangeText={(description) => setDescription(description)}
                                     value={description}
                                     
@@ -127,10 +128,13 @@ export default function CreatingToDo() {
 const styles = StyleSheet.create({
     mainTitle: {
         margin: 5,
-        fontSize: 20,
+        fontSize: 24,
+        width: '100%',
         textAlign: 'center',
         justifyContent: 'center',
-        color: 'white'
+        color: 'white',
+        borderBottomColor: 'white',
+        borderBottomWidth: 1,
     },
     content: {
         flex: 3,
@@ -146,7 +150,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     ViewInput: {
-        padding: 8,
+        padding: 14,
         paddingVertical: 20,
     },
     showTextDateTime: {
@@ -156,7 +160,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     ToDoInput: {
-        padding: 5,
         color: 'black',
         maxHeight: 80,
         width: 220,
