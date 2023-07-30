@@ -3,8 +3,9 @@ import {ToDoContext} from '../context/ToDoContext'
 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 export default function CreatingCards() {
 
@@ -16,19 +17,47 @@ export default function CreatingCards() {
 
                 const {0: title, 1: description, 2: dateandtime, 3: isFavourite} = Object.values(item)
 
+                const changeFavourite = (elementIndex) => {
+
+                    const updatedData = [...data];   
+                    updatedData[elementIndex].isFavourite = !updatedData[elementIndex].isFavourite;
+                    setData(updatedData);
+                }
+
+                const deleteFavourite = (elementIndex) => {
+
+                    const updatedData = [...data];   
+                    updatedData.splice(elementIndex, 1);
+                    setData(updatedData);
+                }
+
                 const checkIfFavourite = () => {
                     if(isFavourite == false) {
                         return (
                             <>
-                                <MaterialIcons name="favorite" size={24} color="white" />
-                                <AntDesign name="edit" size={24} color="white" />
+                            <TouchableHighlight onPress={() => changeFavourite(index)}>
+                                <View>
+                                <MaterialIcons 
+                                    name="favorite-outline" 
+                                    size={24} 
+                                    color="white" 
+                                />
+                                </View>
+                            </TouchableHighlight>
                             </>
                         )
                     } else {
                         return (
                             <>
-                                <MaterialIcons name="favorite-outline" size={24} color="white" />
-                                <AntDesign name="edit" size={24} color="white" />
+                            <TouchableHighlight onPress={() => changeFavourite(index)}>
+                                <View>
+                                    <MaterialIcons 
+                                        name="favorite" 
+                                        size={24} 
+                                        color="white" 
+                                    />
+                                </View>
+                            </TouchableHighlight>
                             </>
                         )
                     }
@@ -41,12 +70,22 @@ export default function CreatingCards() {
                                 <Text style={styles.simpleText}>
                                     N°: {index}
                                 </Text>    
-                                <Text style={{color: 'white', textAlign: 'center', width: '100%'}}>
+                                <Text style={{color: 'white', textAlign: 'center'}}>
                                     {dateandtime}
                                 </Text>
                             </View>
                             <View style={styles.iconsView}>
                                 {checkIfFavourite()}
+                                <AntDesign name="edit" size={24} color="white" />
+                                <TouchableHighlight onPress={() => deleteFavourite(index)}>
+                                    <View>
+                                        <MaterialCommunityIcons 
+                                            name="delete-outline" 
+                                            size={24} 
+                                            color="white" 
+                                        />
+                                    </View>
+                                </TouchableHighlight>
                             </View>
                         </View>
                         <View style={styles.descriptionView}>

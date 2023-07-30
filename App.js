@@ -10,7 +10,9 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { Ionicons } from '@expo/vector-icons';
 
-const Tab = createBottomTabNavigator();
+export default function App() {
+
+	const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   return (
@@ -52,8 +54,6 @@ function MyTabs() {
     </Tab.Navigator>
   );
 } 
-
-export default function App() {
 
 	const [data, setData] = useState([]) 
 

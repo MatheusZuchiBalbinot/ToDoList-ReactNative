@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { Divider } from "@react-native-material/core";
 import React, {useState} from 'react'
 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -7,6 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons'; 
 
 import { useContext } from 'react';
 import {ToDoContext} from '../../context/ToDoContext'
@@ -59,11 +62,11 @@ export default function CreatingToDo() {
                 colors={['#000000', '#090909']}>
                     <View style={styles.ToDoForm}>
                         <Text style={styles.mainTitle}>Crie uma Tarefa</Text>
+                        <Divider style={{ width: '75%', backgroundColor: 'white'}} leadingInset={42} />
                         <View style={{width: '100%'}}>
-                            <Text style={styles.inputTitle}>Tarefa:</Text>
+                            <Text style={styles.inputTitle}>Título:</Text>
                             <View style={{flexDirection: 'row'}}>
                                 <FontAwesome5 style={{padding: 7}} name="tasks" size={24} color="white" />
-                                
                                 <TextInput
                                     style={styles.ToDoInput}
                                     placeholderTextColor='gray'
@@ -89,14 +92,26 @@ export default function CreatingToDo() {
                             </View>
                         </View>
                         <View>
-                            <Text style={styles.inputTitle}> Data e Hora:</Text>
+                            <Text style={styles.dateandtimeTitle}> Data e Hora:</Text>
                             <View style={styles.ViewInput}>
                                 <View style={styles.DateTimeView}>
                                     <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('date')}>
-                                        <Text style={styles.DateTimeText}>Data</Text>
+                                        <Text style={styles.DateTimeText}>
+                                            <MaterialIcons 
+                                                name="date-range" 
+                                                size={24} 
+                                                color="black" 
+                                            />
+                                        </Text>
                                     </Pressable>  
                                     <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('time')}>
-                                        <Text style={styles.DateTimeText}>Horário</Text>
+                                        <Text style={styles.DateTimeText}>
+                                            <Ionicons 
+                                                name="time-outline" 
+                                                size={24} 
+                                                color="black" 
+                                            />
+                                        </Text>
                                     </Pressable>         
                                 </View>
                             </View>
@@ -133,8 +148,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         color: 'white',
-        borderBottomColor: 'white',
-        borderBottomWidth: 1,
+        fontFamily: 'Helvetica',
     },
     content: {
         flex: 3,
@@ -145,7 +159,7 @@ const styles = StyleSheet.create({
     ToDoForm: {
         padding: 15,
         borderColor: 'white',
-        borderWidth: 2,
+        borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: 10,
     },
@@ -170,6 +184,12 @@ const styles = StyleSheet.create({
         marginTop: 15,
         color: 'white',        
     },
+    dateandtimeTitle: {
+        fontSize: 14,
+        marginTop: 15,
+        color: 'white',
+        textAlign: 'center',
+    },
     DateTimeView: {
         flexDirection: 'row', 
         display: 'flex',
@@ -180,7 +200,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
-        width: 80,
+        width: 50,
         borderRadius: 4,
         elevation: 10,
         backgroundColor: 'white',
