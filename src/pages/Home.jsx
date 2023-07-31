@@ -13,7 +13,7 @@ export default function Home() {
     const {data, setData, favouriteData, setFavouriteData} = useContext(ToDoContext)
 
     const positioningCards = () => {
-        if(data != '') {
+        if(data != '' || favouriteData != '') {
             return (
                 <ScrollView style={{backgroundColor: 'rgba(30,30,30,255)'}}>
                     <View style={styles.main}>
