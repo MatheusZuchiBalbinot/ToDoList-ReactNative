@@ -10,9 +10,9 @@ import { ScrollView } from "react-native";
 
 export default function Home() {
 
-    const {data} = useContext(ToDoContext)
+    const {data, setData, favouriteData, setFavouriteData} = useContext(ToDoContext)
 
-    const checkIfDataExists = () => {
+    const positioningCards = () => {
         if(data != '') {
             return (
                 <ScrollView style={{backgroundColor: 'rgba(30,30,30,255)'}}>
@@ -40,7 +40,7 @@ export default function Home() {
         }
     }
 
-    return checkIfDataExists()
+    return positioningCards()
 }
 
 const styles = StyleSheet.create({

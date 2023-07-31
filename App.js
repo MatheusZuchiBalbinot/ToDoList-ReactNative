@@ -35,7 +35,7 @@ function MyTabs() {
         }}
       />
       <Tab.Screen 
-        name=" Criar To Do" 
+        name=" Criar Tarefa" 
         component={CreateToDo}
         options={{
 			headerStyle: {
@@ -56,9 +56,10 @@ function MyTabs() {
 } 
 
 	const [data, setData] = useState([]) 
+	const [favouriteData, setFavouriteData] = useState([])
 
 	return (
-		<ToDoContext.Provider value={{data, setData}}>
+		<ToDoContext.Provider value={{data, setData, favouriteData, setFavouriteData}}>
 			<NavigationContainer>
 				<MyTabs/>
 			</NavigationContainer>

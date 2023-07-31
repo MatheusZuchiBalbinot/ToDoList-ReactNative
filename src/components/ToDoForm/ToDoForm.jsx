@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Alert } from 'react-native';
 import { Divider } from "@react-native-material/core";
 import React, {useState} from 'react'
 
@@ -51,81 +51,79 @@ export default function CreatingToDo() {
             setInitialText('')
         }
         else {
-            alert('Por favor, preencha todos os campos')
+            Alert.alert('Campos Vazios','Por favor, preencha todos os campos')
         }
     }
 
     return (
         <View style={styles.content}> 
-            <LinearGradient
-                style={{borderRadius: 10}}
-                colors={['#000000', '#090909']}>
-                    <View style={styles.ToDoForm}>
-                        <Text style={styles.mainTitle}>Crie uma Tarefa</Text>
-                        <Divider style={{ width: '75%', backgroundColor: 'white'}} leadingInset={42} />
-                        <View style={{width: '100%'}}>
+            <View style={styles.ToDoForm}>
+                <Text style={styles.mainTitle}>Crie uma Tarefa</Text>
+                <Divider style={styles.dividerStyle} leadingInset={42} />
+                <View style={styles.inputsView}>
+                    <View style={styles.viewInput}>
+                        <FontAwesome5 style={styles.iconStyle} name="tasks" size={24} color="white" />
+                        <View style={styles.viewInputDirection}>
                             <Text style={styles.inputTitle}>Título:</Text>
-                            <View style={{flexDirection: 'row'}}>
-                                <FontAwesome5 style={{padding: 7}} name="tasks" size={24} color="white" />
-                                <TextInput
-                                    style={styles.ToDoInput}
-                                    placeholderTextColor='gray'
-                                    color = 'white'
-                                    placeholder='Ex: Capinar o Lote de Vovó' 
-                                    onChangeText={(title) => setTitle(title)}
-                                    value={title}
-                                />
-                            </View>
-                            <Text style={styles.inputTitle}>Descrição:</Text>
-                            <View style={{flexDirection: 'row'}}>
-                                <AntDesign name="infocirlceo" style={{padding: 7}} size={24} color="white" />
-                                <TextInput
-                                    style={styles.ToDoInput}
-                                    placeholderTextColor='gray'
-                                    plac
-                                    color = 'white'
-                                    placeholder='Ex: Capinar 1/4 do lote de Vovó' 
-                                    onChangeText={(description) => setDescription(description)}
-                                    value={description}
-                                    
-                                />
-                            </View>
-                        </View>
-                        <View>
-                            <Text style={styles.dateandtimeTitle}> Data e Hora:</Text>
-                            <View style={styles.ViewInput}>
-                                <View style={styles.DateTimeView}>
-                                    <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('date')}>
-                                        <Text style={styles.DateTimeText}>
-                                            <MaterialIcons 
-                                                name="date-range" 
-                                                size={24} 
-                                                color="black" 
-                                            />
-                                        </Text>
-                                    </Pressable>  
-                                    <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('time')}>
-                                        <Text style={styles.DateTimeText}>
-                                            <Ionicons 
-                                                name="time-outline" 
-                                                size={24} 
-                                                color="black" 
-                                            />
-                                        </Text>
-                                    </Pressable>         
-                                </View>
-                            </View>
-                            {initialText && (
-                                <Text style={styles.showTextDateTime}>{initialText}</Text>
-                            )}
-                        </View>
-                        <View style={{display: 'flex', alignItems: 'center'}}>
-                            <Pressable style={styles.sendButton} onPress={handleSubmit}>
-                                <Text style={styles.sendText}>Criar</Text>
-                            </Pressable>  
+                            <TextInput
+                                style={styles.ToDoInput}
+                                placeholderTextColor='gray'
+                                color = 'white'
+                                placeholder='Ex: Capinar o Lote de Vovó' 
+                                onChangeText={(title) => setTitle(title)}
+                                value={title}
+                            />
                         </View>
                     </View>
-            </LinearGradient>
+                    <View style={styles.viewInput}>
+                        <AntDesign name="infocirlceo" style={styles.iconStyle} size={24} color="white" />
+                        <View style={styles.viewInputDirection}>
+                            <Text style={styles.inputTitle}>Descrição:</Text>
+                            <TextInput
+                                style={styles.ToDoInput}
+                                placeholderTextColor='gray'
+                                color = 'white'
+                                placeholder='Ex: Capinar 1/4 do lote de Vovó' 
+                                onChangeText={(description) => setDescription(description)}
+                                value={description}
+                                
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View>
+                    <View style={styles.ViewInput}>
+                        <View style={styles.DateTimeView}>
+                            <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('date')}>
+                                <Text style={styles.DateTimeText}>
+                                    <MaterialIcons 
+                                        name="date-range" 
+                                        size={24} 
+                                        color="black" 
+                                    />
+                                </Text>
+                            </Pressable>  
+                            <Pressable style={styles.DateTimeButton} onPress={() => initialShowMode('time')}>
+                                <Text style={styles.DateTimeText}>
+                                    <Ionicons 
+                                        name="time-outline" 
+                                        size={24} 
+                                        color="black" 
+                                    />
+                                </Text>
+                            </Pressable>         
+                        </View>
+                    </View>
+                    {initialText && (
+                        <Text style={styles.showTextDateTime}>{initialText}</Text>
+                    )}
+                </View>
+                <View style={{display: 'flex', alignItems: 'center'}}>
+                    <Pressable style={styles.sendButton} onPress={handleSubmit}>
+                        <Text style={styles.sendText}>Criar</Text>
+                    </Pressable>  
+                </View>
+            </View>
             {initialShow && (
                 <DateTimePicker 
                     testID='dateTimePicker' 
@@ -148,7 +146,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontFamily: 'Helvetica',
     },
     content: {
         flex: 3,
@@ -158,14 +155,15 @@ const styles = StyleSheet.create({
     },
     ToDoForm: {
         padding: 15,
-        borderColor: 'white',
         borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: 10,
+        backgroundColor: '#03223f',
     },
     ViewInput: {
-        padding: 14,
-        paddingVertical: 20,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        paddingBottom: 15,
     },
     showTextDateTime: {
         marginBottom: 20,
@@ -175,20 +173,12 @@ const styles = StyleSheet.create({
     },
     ToDoInput: {
         color: 'black',
-        maxHeight: 80,
+        padding: 1,
         width: 220,
-        marginHorizontal: 10,
     },
     inputTitle: {
         fontSize: 14,
-        marginTop: 15,
-        color: 'white',        
-    },
-    dateandtimeTitle: {
-        fontSize: 14,
-        marginTop: 15,
-        color: 'white',
-        textAlign: 'center',
+        color: 'goldenrod',        
     },
     DateTimeView: {
         flexDirection: 'row', 
@@ -227,5 +217,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'black',
+    },
+    dividerStyle: {
+        width: '75%', 
+        backgroundColor: 'white'
+    },
+    iconStyle: {
+        padding: 10, 
+        paddingTop: 12
+    },
+    viewInput: {
+        flexDirection: 'row', 
+        borderColor: 'gray', 
+        borderRadius: 10
+    },
+    inputsView: {
+        width: '100%', 
+        paddingVertical: 10, 
+        rowGap: 10
+    },
+    viewInputDirection: {
+        flexDirection: 'column', 
     }
 })

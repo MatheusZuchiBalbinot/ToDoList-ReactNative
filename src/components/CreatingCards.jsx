@@ -9,7 +9,7 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 export default function CreatingCards() {
 
-    const {data, setData} = useContext(ToDoContext)
+    const {data, setData, favouriteData, setFavouriteData} = useContext(ToDoContext)
 
     const CreateCard = () => {
         return (
@@ -21,8 +21,22 @@ export default function CreatingCards() {
 
                     const updatedData = [...data];   
                     updatedData[elementIndex].isFavourite = !updatedData[elementIndex].isFavourite;
+                    
+                    if(updatedData[elementIndex].isFavourite == true) {
+                        const updatedFavouriteData = [...favouriteData, updatedData[elementIndex]];
+                        setFavouriteData(updatedFavouriteData);
+                        updatedData.splice(elementIndex, 1);
+                    }
+                    else {
+                        const updatedDataWithFavourite = [...favouriteData];
+                        updatedDataWithFavourite.splice(elementIndex, 1);
+                        setFavouriteData(updatedDataWithFavourite);
+                    }
                     setData(updatedData);
                 }
+
+                console.log(favouriteData)
+                console.log(data)
 
                 const deleteFavourite = (elementIndex) => {
 
