@@ -26,6 +26,15 @@ export default function CreatingToDo() {
     const [initialShow, setInitialShow] = useState(false);
     const [initialText, setInitialText] = useState('');
 
+    const [formatedDate, setFormatedDate] = useState('');
+
+    const [day, setDay] = useState();
+    const [mounth, setMounth] = useState();
+    const [year, setYear] = useState();
+
+    const [hours, setHours] = useState();
+    const [minutes, setMinutes] = useState();
+
     const InitialOnChange = (event, initialSelectedDate) => {
         const initialCurrentDate = initialSelectedDate || initialDate;
         setInitialShow(false);
@@ -34,6 +43,12 @@ export default function CreatingToDo() {
         let tempDate = new Date(initialCurrentDate);
         let formatedDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + (tempDate.getFullYear());
         let formatedTime = tempDate.getHours() + 'h' + tempDate.getMinutes();
+        setDay(tempDate.getDate())
+        setMounth(tempDate.getMonth())
+        setYear(tempDate.getFullYear())
+        setHours(tempDate.getHours())
+        setMinutes(tempDate.getMinutes())
+        setFormatedDate(formatedDate)
         setInitialText(formatedDate + ' as ' + formatedTime)
 
     }
@@ -45,7 +60,7 @@ export default function CreatingToDo() {
 
     const handleSubmit = () => {
         if(title != '' && description != '' && initialText != '') {
-            setData([...data, {title, description, initialText, isFavourite: false}])
+            setData([...data, {title, description, day, mounth, year, hours, minutes, dateandtime: initialText, isFavourite: false, formatedDate}])
             setTitle('')
             setDescription('')
             setInitialText('')

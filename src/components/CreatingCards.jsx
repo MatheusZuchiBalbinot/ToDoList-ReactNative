@@ -34,11 +34,37 @@ export default function CreatingCards() {
         }
     }
 
-    const deleteFavourite = (elementIndex) => {
+    const deleteFavourite = (element) => {
 
-        const updatedData = [...data];   
-        updatedData.splice(elementIndex, 1);
+        const updatedData = [...data];
+        const updatedFavouriteData = [...favouriteData];
+
+        if(element.isFavourite == true) {
+            const elementIndex = updatedFavouriteData.indexOf(element)
+            updatedFavouriteData.splice(elementIndex, 1)
+
+        } else {
+            const elementIndex = updatedData.indexOf(element)
+            updatedData.splice(elementIndex, 1)
+        }
         setData(updatedData);
+        setFavouriteData(updatedFavouriteData)
+    }
+
+    const comparaitingDateAndHours = (a, b) => {
+        if (a.year !== b.year) {
+            return a.year - b.year;
+        }
+        if (a.mounth !== b.mounth) {
+            return a.mounth - b.mounth;
+        }
+        if (a.day !== b.day) {
+            return a.day - b.day;
+        }
+        if (a.hours !== b.hours) {
+            return a.hours - b.hours;
+        }
+        return a.minutes - b.minutes;
     }
 
     const checkIfFavourite = (element, index) => {
@@ -73,56 +99,70 @@ export default function CreatingCards() {
         }
     }
 
-    const renderNormalCards = () => {
-        return (
-            data.map((item, index) => {
-
-                const {0: title, 1: description, 2: dateandtime, 3: isFavourite} = Object.values(item)
+    const renderNormalCards = (dateandtime, description, isFavourite, title, index, item) => {
+        data.sort(comparaitingDateAndHours);
         
-                return (
-                    <View key={index} style={styles.mainCardView}>
-                        <View style={{flexDirection: 'row'}}> 
-                            <View style={styles.textView}>
-                                <Text style={styles.simpleText}>
-                                    N°: {index}
-                                </Text>    
-                                <Text style={{color: 'white', textAlign: 'center'}}>
-                                    {dateandtime}
-                                </Text>
-                            </View>
-                            <View style={styles.iconsView}>
-                                {checkIfFavourite(item, index)}
-                                <AntDesign name="edit" size={24} color="white" />
-                                <TouchableHighlight onPress={() => deleteFavourite(index)}>
-                                    <View>
-                                        <MaterialCommunityIcons 
-                                            name="delete-outline" 
-                                            size={24} 
-                                            color="white" 
-                                        />
-                                    </View>
-                                </TouchableHighlight>
-                            </View>
-                        </View>
-                        <View style={styles.descriptionView}>
-                            <Text style={styles.simpleText}>
-                                Tarefa: {title}    
-                            </Text> 
-                            <Text style={styles.simpleText}>
-                                Descrição: {description}    
-                            </Text>
-                        </View>
+        return (
+            <View key={index} style={styles.mainCardView}>
+                <View style={{flexDirection: 'row'}}> 
+                    <View style={styles.textView}>
+                        <Text style={styles.simpleText}>
+                            N°: {index}
+                        </Text>    
+                        <Text style={{color: 'white', textAlign: 'center'}}>
+                            {dateandtime}
+                        </Text>
                     </View>
-                )
-            })
+                    <View style={styles.iconsView}>
+                        {checkIfFavourite(item, index)}
+                        <AntDesign name="edit" size={24} color="white" />
+                        <TouchableHighlight onPress={() => deleteFavourite(item)}>
+                            <View>
+                                <MaterialCommunityIcons 
+                                    name="delete-outline" 
+                                    size={24} 
+                                    color="white" 
+                                />
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+                <View style={styles.descriptionView}>
+                    <Text style={styles.simpleText}>
+                        Tarefa: {title}    
+                    </Text> 
+                    <Text style={styles.simpleText}>
+                        Descrição: {description}    
+                    </Text>
+                </View>
+            </View>
         )
     }
 
+    const groupNormalDataByDate = () => {
+        const groupedData = {};
+
+        data.forEach((item) => {
+            const { formatedDate } = item;
+
+            if (!groupedData[formatedDate]) {
+            groupedData[formatedDate] = [];
+            }
+
+            groupedData[formatedDate].push(item);
+        });
+
+        return groupedData;
+    };
+
+    const groupedData = groupNormalDataByDate();
+
     const renderFavouriteCards = () => {
+        favouriteData.sort(comparaitingDateAndHours);
         return (
             favouriteData.map((item, index) => {
 
-                const {0: title, 1: description, 2: dateandtime, 3: isFavourite} = Object.values(item)
+                const {0: title, 1: description, 2: day, 3: mounth, 4: year, 5: hours, 6: minutes, 7: dateandtime, 8: isFavourite} = Object.values(item)
         
                 return (
                     <View key={index} style={styles.mainCardView}>
@@ -138,7 +178,7 @@ export default function CreatingCards() {
                             <View style={styles.iconsView}>
                                 {checkIfFavourite(item, index)}
                                 <AntDesign name="edit" size={24} color="white" />
-                                <TouchableHighlight onPress={() => deleteFavourite(index)}>
+                                <TouchableHighlight onPress={() => deleteFavourite(item)}>
                                     <View>
                                         <MaterialCommunityIcons 
                                             name="delete-outline" 
@@ -182,7 +222,18 @@ export default function CreatingCards() {
 
             <View>
                 <Text style={styles.cardsPriorityText}> Cards sem prioridade: </Text>
-                {renderNormalCards()}
+                {Object.keys(groupedData).map((date, index) => (
+                    <View key={index}>
+                        <Text>{date}</Text>
+                        <View> 
+                            {groupedData[date].map((item, index) => (
+                                <View key={index}> 
+                                    {renderNormalCards(item.dateandtime, item.description, item.isFavourite, item.title, index, item)}
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                ))}
             </View>
         </View>
     )
