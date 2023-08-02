@@ -22,11 +22,11 @@ function MyTabs() {
         component={Home} 
         options={{
 			headerStyle: {
-				backgroundColor: '#E4F2E7',
+				backgroundColor: 'white',
 			},
 			headerTintColor: 'black',
 			tabBarStyle: {
-				backgroundColor: '#E4F2E7'
+				backgroundColor: 'white'
 			},
 			tabBarLabel: 'Home',
 			tabBarIcon: ({ color, size }) => (
@@ -39,11 +39,11 @@ function MyTabs() {
         component={CreateToDo}
         options={{
 			headerStyle: {
-				backgroundColor: '#E4F2E7',
+				backgroundColor: 'white',
 			},
 			headerTintColor: 'black',
 			tabBarStyle: {
-				backgroundColor: '#E4F2E7'
+				backgroundColor: 'white'
 			},
 			tabBarLabel: 'Add Task',
 			tabBarIcon: ({ color }) => (

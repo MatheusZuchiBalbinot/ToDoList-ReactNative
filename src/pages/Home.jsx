@@ -15,7 +15,7 @@ export default function Home() {
     const positioningCards = () => {
         if(data != '' || favouriteData != '') {
             return (
-                <ScrollView style={{backgroundColor: '#E4F2E7'}}>
+                <ScrollView style={{backgroundColor: '#FFFFFA'}}>
                     <View style={styles.main}>
                         <StatusBar hidden />
                         <View style={{width: '95%'}}> 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#E4F2E7',
+        backgroundColor: '#FFFFFA',
         color: 'white',
         alignItems: 'center',
         paddingVertical: 20,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     mainWhitoutData: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#E4F2E7',
+        backgroundColor: '#FFFFFA',
         color: 'black',
         alignItems: 'center',
         padding: 20,

@@ -10,7 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 
 import { useContext } from 'react';
-import {ToDoContext} from '../../context/ToDoContext'
+import {ToDoContext} from '../../context/ToDoContext';
 
 export default function CreatingToDo() {
 
@@ -106,6 +106,7 @@ export default function CreatingToDo() {
                 setTitle('');
                 setDescription('');
                 setInitialText('');
+                Alert.alert('Sucesso', 'Tarefa cadastrada com sucesso.');
             } else {
                 Alert.alert('Campos Vazios', 'Por favor, preencha todos os campos');
             }

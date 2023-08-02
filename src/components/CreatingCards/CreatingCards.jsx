@@ -1,11 +1,10 @@
 import { useContext } from 'react';
 import {ToDoContext} from '../../context/ToDoContext'
 
-import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, Alert } from 'react-native';
 
 import { Divider } from "@react-native-material/core";
 
@@ -53,6 +52,7 @@ export default function CreatingCards() {
         }
         setData(updatedData);
         setFavouriteData(updatedFavouriteData)
+        Alert.alert('Sucesso', 'Tarefa excluida com sucesso.');
     }
 
     const comparaitingDateAndHours = (a, b) => {
@@ -75,12 +75,12 @@ export default function CreatingCards() {
         if(element.isFavourite == false) {
             return (
                 <>
-                <TouchableHighlight onPress={() => changeFavourite(element, index)}>
+                <TouchableHighlight underlayColor="gray" onPress={() => changeFavourite(element, index)}>
                     <View>
                     <AntDesign 
                         name="staro" 
                         size={24} 
-                        color="white" 
+                        color="black" 
                     />
                     </View>
                 </TouchableHighlight>
@@ -89,12 +89,12 @@ export default function CreatingCards() {
         } else {
             return (
                 <>
-                <TouchableHighlight onPress={() => changeFavourite(element, index)}>
+                <TouchableHighlight underlayColor="gray" onPress={() => changeFavourite(element, index)}>
                     <View>
                      <AntDesign 
                         name="star" 
                         size={24} 
-                        color="white" 
+                        color="black" 
                      />
                     </View>
                 </TouchableHighlight>
@@ -103,9 +103,7 @@ export default function CreatingCards() {
         }
     }
 
-    const renderNormalCards = (dateandtime, description, isFavourite, title, index, item) => {
-        data.sort(comparaitingDateAndHours);
-        
+    const generateCards = (index, dateandtime, title, description, item) => {
         return (
             <View key={index} style={styles.mainCardView}>
                 <View style={{flexDirection: 'row'}}> 
@@ -113,34 +111,38 @@ export default function CreatingCards() {
                         <Text style={styles.simpleText}>
                             N°: {index}
                         </Text>    
-                        <Text style={{color: 'white', textAlign: 'center'}}>
+                        <Text style={styles.dateandtimeText}>
                             {dateandtime}
                         </Text>
                     </View>
                     <View style={styles.iconsView}>
                         {checkIfFavourite(item, index)}
-                        <AntDesign name="edit" size={24} color="white" />
-                        <TouchableHighlight onPress={() => deleteFavourite(item)}>
+                        <TouchableHighlight underlayColor="gray" onPress={() => deleteFavourite(item)}>
                             <View>
                                 <MaterialCommunityIcons 
                                     name="delete-outline" 
                                     size={24} 
-                                    color="white" 
+                                    color="black" 
                                 />
                             </View>
                         </TouchableHighlight>
                     </View>
                 </View>
                 <View style={styles.descriptionView}>
-                    <Text style={styles.simpleText}>
-                        Tarefa: {title}    
+                    <Text style={styles.titleText}>
+                        {title}    
                     </Text> 
-                    <Text style={styles.simpleText}>
-                        Descrição: {description}    
+                    <Text style={styles.descriptionText}>
+                        {description}    
                     </Text>
                 </View>
             </View>
         )
+    }
+
+    const renderNormalCards = (title, description, dateandtime, item, index) => {
+        data.sort(comparaitingDateAndHours);
+        return generateCards(index, dateandtime, title, description, item)
     }
 
     const groupNormalDataByDate = () => {
@@ -166,44 +168,9 @@ export default function CreatingCards() {
         favouriteData.sort(comparaitingDateAndHours);
         return (
             favouriteData.map((item, index) => {
-
-                const {0: title, 1: description, 2: day, 3: mounth, 4: year, 5: hours, 6: minutes, 7: dateandtime, 8: isFavourite} = Object.values(item)
+                const {0: title, 1: description, 7: dateandtime} = Object.values(item)
         
-                return (
-                    <View key={index} style={styles.mainCardView}>
-                        <View style={{flexDirection: 'row'}}> 
-                            <View style={styles.textView}>
-                                <Text style={styles.simpleText}>
-                                    N°: {index + 1}
-                                </Text>    
-                                <Text style={{color: 'white', textAlign: 'center'}}>
-                                    {dateandtime}
-                                </Text>
-                            </View>
-                            <View style={styles.iconsView}>
-                                {checkIfFavourite(item, index)}
-                                <AntDesign name="edit" size={24} color="white" />
-                                <TouchableHighlight onPress={() => deleteFavourite(item)}>
-                                    <View>
-                                        <MaterialCommunityIcons 
-                                            name="delete-outline" 
-                                            size={24} 
-                                            color="white" 
-                                        />
-                                    </View>
-                                </TouchableHighlight>
-                            </View>
-                        </View>
-                        <View style={styles.descriptionView}>
-                            <Text style={styles.simpleText}>
-                                {title}    
-                            </Text> 
-                            <Text style={styles.simpleText}>
-                                Descrição: {description}    
-                            </Text>
-                        </View>
-                    </View>
-                )
+                return generateCards(index + 1, dateandtime, title, description, item)
             })
         )
     }
@@ -219,28 +186,41 @@ export default function CreatingCards() {
         }
     }
 
+    const checkifNormalAvailable = () => {
+        if(data.length > 0) {
+            return (
+                <>
+                    <Text style={styles.cardsPriorityText}> Tarefas sem prioridade: </Text>
+                    {Object.keys(groupedData).map((date, mainIndex) => (
+                        <View key={mainIndex}>
+                            <Text style={styles.viewDateText}>
+                                {date}
+                            </Text>
+                            <Divider 
+                                style={styles.dividerStyle} 
+                                leadingInset={28} 
+                            />
+                            <View> 
+                                {groupedData[date].map((item, index) => (
+                                    <View key={index}> 
+                                        {renderNormalCards(item.title, item.description, item.dateandtime, item, index + 1)}
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    ))}
+                </>
+            )
+        }
+    }
+
     return (
         <View style={{width: '95%'}}>
             <View>
                 {checkIfFavouritesAvailable()}
             </View>
-
             <View>
-                <Text style={styles.cardsPriorityText}> Tarefas Normais: </Text>
-                {Object.keys(groupedData).map((date, mainIndex) => (
-                    <View key={mainIndex}>
-                        <Text style={{color: 'white', padding: 15, textAlign: 'center'}}>{date}</Text>
-                        <Divider style={styles.dividerStyle} leadingInset={28} />
-                        
-                        <View> 
-                            {groupedData[date].map((item, index) => (
-                                <View key={index}> 
-                                    {renderNormalCards(item.dateandtime, item.description, item.isFavourite, item.title, index + 1, item)}
-                                </View>
-                            ))}
-                        </View>
-                    </View>
-                ))}
+                {checkifNormalAvailable()}
             </View>
         </View>
     )
@@ -250,48 +230,69 @@ const styles = StyleSheet.create({
     mainCardView: {
         display: 'flex',
         flexDirection: 'column',
-        padding: 5,
         margin: 10,
-        backgroundColor: "#2c2f1d",
+        backgroundColor: "white",
         width: '100%',
         borderRadius: 20,
+        elevation: 5,
     },
     descriptionView: {
         display: 'flex',
-        margin: 10,
-        rowGap: 10,
+        marginHorizontal: 10,
+        marginBottom: 10,
     },
     textView: {
         flexDirection: 'row', 
-        width: '56%', 
+        width: '50%', 
         height: 50, 
-        gap: 20, 
+        gap: 35, 
         alignItems: 'center',
         padding: 10,
+        color: 'black'
     },
     dividerStyle: {
         width: '90%', 
-        backgroundColor: 'white'
+        backgroundColor: 'black',
+    },
+    viewDateText: {
+        color: 'black', 
+        padding: 15, 
+        textAlign: 'center',
     },
     iconsView: {
         width: 150,
         flexDirection: 'row', 
         alignItems: 'center',
         justifyContent: 'flex-end',
-        gap: 20,
-        paddingEnd: 10,
+        gap: 15,
     }, 
     simpleText: {
-        color: 'gray',
+        color: 'black',
         fontSize: 14,
+    },
+    descriptionText: {
+        fontWeight: '300',
+        fontSize: 14,
+        color: 'gray',
     },
     titleText: {
         color: 'white',
         fontSize: 18,
     },
     cardsPriorityText: {
-        color: 'white',
-        fontSize: 14,
+        color: 'black',
+        fontSize: 16,
         fontWeight: 'bold',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        paddingBottom: 15,
+    },
+    titleText: {
+        fontSize: 18,
+        color: 'black',
+    }, 
+    dateandtimeText: {
+        textAlign: 'center',
+        color: 'black'
     }
 })
