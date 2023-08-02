@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useContext } from 'react';
 import {ToDoContext} from '../context/ToDoContext'
 
-import CreatingCards from '../components/CreatingCards';
+import CreatingCards from '../components/CreatingCards/CreatingCards';
 
 import { ScrollView } from "react-native";
 
@@ -15,11 +15,8 @@ export default function Home() {
     const positioningCards = () => {
         if(data != '' || favouriteData != '') {
             return (
-                <ScrollView style={{backgroundColor: 'rgba(30,30,30,255)'}}>
+                <ScrollView style={{backgroundColor: '#E4F2E7'}}>
                     <View style={styles.main}>
-                        <Text style={styles.title}>
-                            Tarefas:
-                        </Text>
                         <StatusBar hidden />
                         <View style={{width: '95%'}}> 
                             <CreatingCards />
@@ -47,7 +44,7 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'rgba(30,30,30,255)',
+        backgroundColor: '#E4F2E7',
         color: 'white',
         alignItems: 'center',
         paddingVertical: 20,
@@ -55,8 +52,8 @@ const styles = StyleSheet.create({
     mainWhitoutData: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'rgba(30,30,30,255)',
-        color: 'white',
+        backgroundColor: '#E4F2E7',
+        color: 'black',
         alignItems: 'center',
         padding: 20,
         justifyContent: 'center',
@@ -65,7 +62,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: 'white',
+        color: 'black',
         marginBottom: 20,
         justifyContent: 'center'
     }

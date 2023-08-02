@@ -18,15 +18,15 @@ function MyTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen 
-        name="Home" 
+        name="Tarefas" 
         component={Home} 
         options={{
 			headerStyle: {
-				backgroundColor: 'rgba(30,30,30,255)',
+				backgroundColor: '#E4F2E7',
 			},
-			headerTintColor: 'white',
+			headerTintColor: 'black',
 			tabBarStyle: {
-				backgroundColor: 'rgba(30,30,30,255)'
+				backgroundColor: '#E4F2E7'
 			},
 			tabBarLabel: 'Home',
 			tabBarIcon: ({ color, size }) => (
@@ -35,17 +35,17 @@ function MyTabs() {
         }}
       />
       <Tab.Screen 
-        name=" Criar Tarefa" 
+        name="Criar Tarefa" 
         component={CreateToDo}
         options={{
 			headerStyle: {
-				backgroundColor: 'rgba(30,30,30,255)',
+				backgroundColor: '#E4F2E7',
 			},
-			headerTintColor: 'white',
+			headerTintColor: 'black',
 			tabBarStyle: {
-				backgroundColor: 'rgba(30,30,30,255)'
+				backgroundColor: '#E4F2E7'
 			},
-			tabBarLabel: 'Add To Do',
+			tabBarLabel: 'Add Task',
 			tabBarIcon: ({ color }) => (
 				<Ionicons name="add" color={color} size={32} />
 			),

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import {ToDoContext} from '../context/ToDoContext'
+import {ToDoContext} from '../../context/ToDoContext'
 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -7,11 +7,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
+import { Divider } from "@react-native-material/core";
+
+
 export default function CreatingCards() {
 
     const {data, setData, favouriteData, setFavouriteData} = useContext(ToDoContext)
 
-    const changeFavourite = (elementIndex, element) => {
+    const changeFavourite = (element) => {
 
         const updatedData = [...data];
         const updatedFavouriteData = [...favouriteData];
@@ -30,6 +33,7 @@ export default function CreatingCards() {
                 updatedData.splice(indexInData, 1)
             }
             setData(updatedData);
+
             setFavouriteData(updatedFavouriteData);
         }
     }
@@ -71,10 +75,10 @@ export default function CreatingCards() {
         if(element.isFavourite == false) {
             return (
                 <>
-                <TouchableHighlight onPress={() => changeFavourite(index, element)}>
+                <TouchableHighlight onPress={() => changeFavourite(element, index)}>
                     <View>
-                    <MaterialIcons 
-                        name="favorite-outline" 
+                    <AntDesign 
+                        name="staro" 
                         size={24} 
                         color="white" 
                     />
@@ -85,13 +89,13 @@ export default function CreatingCards() {
         } else {
             return (
                 <>
-                <TouchableHighlight onPress={() => changeFavourite(index, element)}>
+                <TouchableHighlight onPress={() => changeFavourite(element, index)}>
                     <View>
-                        <MaterialIcons 
-                            name="favorite" 
-                            size={24} 
-                            color="white" 
-                        />
+                     <AntDesign 
+                        name="star" 
+                        size={24} 
+                        color="white" 
+                     />
                     </View>
                 </TouchableHighlight>
                 </>
@@ -140,6 +144,7 @@ export default function CreatingCards() {
     }
 
     const groupNormalDataByDate = () => {
+        data.sort(comparaitingDateAndHours);
         const groupedData = {};
 
         data.forEach((item) => {
@@ -169,7 +174,7 @@ export default function CreatingCards() {
                         <View style={{flexDirection: 'row'}}> 
                             <View style={styles.textView}>
                                 <Text style={styles.simpleText}>
-                                    N°: {index}
+                                    N°: {index + 1}
                                 </Text>    
                                 <Text style={{color: 'white', textAlign: 'center'}}>
                                     {dateandtime}
@@ -191,7 +196,7 @@ export default function CreatingCards() {
                         </View>
                         <View style={styles.descriptionView}>
                             <Text style={styles.simpleText}>
-                                Tarefa: {title}    
+                                {title}    
                             </Text> 
                             <Text style={styles.simpleText}>
                                 Descrição: {description}    
@@ -207,7 +212,7 @@ export default function CreatingCards() {
         if(favouriteData.length != 0) {
             return (
                 <View> 
-                    <Text style={styles.cardsPriorityText}> Cards em destaque: </Text>
+                    <Text style={styles.cardsPriorityText}> Tarefas em Destaque: </Text>
                     {renderFavouriteCards()}
                 </View>
             )
@@ -221,14 +226,16 @@ export default function CreatingCards() {
             </View>
 
             <View>
-                <Text style={styles.cardsPriorityText}> Cards sem prioridade: </Text>
-                {Object.keys(groupedData).map((date, index) => (
-                    <View key={index}>
-                        <Text>{date}</Text>
+                <Text style={styles.cardsPriorityText}> Tarefas Normais: </Text>
+                {Object.keys(groupedData).map((date, mainIndex) => (
+                    <View key={mainIndex}>
+                        <Text style={{color: 'white', padding: 15, textAlign: 'center'}}>{date}</Text>
+                        <Divider style={styles.dividerStyle} leadingInset={28} />
+                        
                         <View> 
                             {groupedData[date].map((item, index) => (
                                 <View key={index}> 
-                                    {renderNormalCards(item.dateandtime, item.description, item.isFavourite, item.title, index, item)}
+                                    {renderNormalCards(item.dateandtime, item.description, item.isFavourite, item.title, index + 1, item)}
                                 </View>
                             ))}
                         </View>
@@ -262,6 +269,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
     },
+    dividerStyle: {
+        width: '90%', 
+        backgroundColor: 'white'
+    },
     iconsView: {
         width: 150,
         flexDirection: 'row', 
@@ -271,8 +282,12 @@ const styles = StyleSheet.create({
         paddingEnd: 10,
     }, 
     simpleText: {
-        color: 'white',
+        color: 'gray',
         fontSize: 14,
+    },
+    titleText: {
+        color: 'white',
+        fontSize: 18,
     },
     cardsPriorityText: {
         color: 'white',

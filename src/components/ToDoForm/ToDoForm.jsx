@@ -4,8 +4,6 @@ import React, {useState} from 'react'
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { LinearGradient } from 'expo-linear-gradient';
-
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -29,7 +27,7 @@ export default function CreatingToDo() {
     const [formatedDate, setFormatedDate] = useState('');
 
     const [day, setDay] = useState();
-    const [mounth, setMounth] = useState();
+    const [month, setMonth] = useState();
     const [year, setYear] = useState();
 
     const [hours, setHours] = useState();
@@ -38,18 +36,18 @@ export default function CreatingToDo() {
     const InitialOnChange = (event, initialSelectedDate) => {
         const initialCurrentDate = initialSelectedDate || initialDate;
         setInitialShow(false);
-        setInitialDate(initialCurrentDate)
+        setInitialDate(initialCurrentDate);
 
         let tempDate = new Date(initialCurrentDate);
-        let formatedDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + (tempDate.getFullYear());
+        let formatedDate = formatDate(tempDate); // Utiliza a função para formatar a data
         let formatedTime = tempDate.getHours() + 'h' + tempDate.getMinutes();
-        setDay(tempDate.getDate())
-        setMounth(tempDate.getMonth())
-        setYear(tempDate.getFullYear())
-        setHours(tempDate.getHours())
-        setMinutes(tempDate.getMinutes())
-        setFormatedDate(formatedDate)
-        setInitialText(formatedDate + ' as ' + formatedTime)
+        setDay(tempDate.getDate());
+        setMonth(tempDate.getMonth() + 1);
+        setYear(tempDate.getFullYear());
+        setHours(tempDate.getHours());
+        setMinutes(tempDate.getMinutes());
+        setFormatedDate(formatedDate);
+        setInitialText(formatedDate + ' às ' + formatedTime);
 
     }
 
@@ -58,16 +56,60 @@ export default function CreatingToDo() {
         setInitialMode(currentMode)
     }
 
+    const isTimePast = () => {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; 
+        const currentDay = currentDate.getDate();
+        const currentHours = currentDate.getHours();
+        const currentMinutes = currentDate.getMinutes();
+    
+        if (year < currentYear) {
+            return true;
+        } else if (year === currentYear && month < currentMonth) {
+            return true;
+        } else if (year === currentYear && month === currentMonth && day < currentDay) {
+            return true;
+        } else if (
+            year === currentYear &&
+            month === currentMonth &&
+            day === currentDay &&
+            hours < currentHours
+        ) {
+            return true;
+        } else if (
+            year === currentYear &&
+            month === currentMonth &&
+            day === currentDay &&
+            hours === currentHours &&
+            minutes < currentMinutes
+        ) {
+            return true;
+        }
+            return false;
+    };
+
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+
     const handleSubmit = () => {
-        if(title != '' && description != '' && initialText != '') {
-            setData([...data, {title, description, day, mounth, year, hours, minutes, dateandtime: initialText, isFavourite: false, formatedDate}])
-            setTitle('')
-            setDescription('')
-            setInitialText('')
-        }
-        else {
-            Alert.alert('Campos Vazios','Por favor, preencha todos os campos')
-        }
+
+        if (isTimePast(year, month, day, hours, minutes)) {
+            Alert.alert('Aviso', 'Não é possível cadastrar uma tarefa para o passado!! Por favor, coloque uma data válida.');
+        } else {
+            if (title !== '' && description !== '' && initialText !== '') {
+                setData([...data, { title, description, day, month, year, hours, minutes, dateandtime: initialText, isFavourite: false, formatedDate }]);
+                setTitle('');
+                setDescription('');
+                setInitialText('');
+            } else {
+                Alert.alert('Campos Vazios', 'Por favor, preencha todos os campos');
+            }
+          }
     }
 
     return (
@@ -77,28 +119,28 @@ export default function CreatingToDo() {
                 <Divider style={styles.dividerStyle} leadingInset={42} />
                 <View style={styles.inputsView}>
                     <View style={styles.viewInput}>
-                        <FontAwesome5 style={styles.iconStyle} name="tasks" size={24} color="white" />
+                        <FontAwesome5 style={styles.iconStyle} name="tasks" size={24} color="black" />
                         <View style={styles.viewInputDirection}>
                             <Text style={styles.inputTitle}>Título:</Text>
                             <TextInput
                                 style={styles.ToDoInput}
                                 placeholderTextColor='gray'
-                                color = 'white'
-                                placeholder='Ex: Capinar o Lote de Vovó' 
+                                color = 'black'
+                                placeholder='Ex: Capinar' 
                                 onChangeText={(title) => setTitle(title)}
                                 value={title}
                             />
                         </View>
                     </View>
                     <View style={styles.viewInput}>
-                        <AntDesign name="infocirlceo" style={styles.iconStyle} size={24} color="white" />
+                        <AntDesign name="infocirlceo" style={styles.iconStyle} size={24} color="black" />
                         <View style={styles.viewInputDirection}>
                             <Text style={styles.inputTitle}>Descrição:</Text>
                             <TextInput
                                 style={styles.ToDoInput}
                                 placeholderTextColor='gray'
-                                color = 'white'
-                                placeholder='Ex: Capinar 1/4 do lote de Vovó' 
+                                color = 'black'
+                                placeholder='Ex: Capinar 1/4 do lote' 
                                 onChangeText={(description) => setDescription(description)}
                                 value={description}
                                 
@@ -157,10 +199,9 @@ const styles = StyleSheet.create({
     mainTitle: {
         margin: 5,
         fontSize: 24,
-        width: '100%',
         textAlign: 'center',
         justifyContent: 'center',
-        color: 'white',
+        color: 'black',
     },
     content: {
         flex: 3,
@@ -170,10 +211,8 @@ const styles = StyleSheet.create({
     },
     ToDoForm: {
         padding: 15,
-        borderWidth: 1,
-        borderStyle: 'solid',
         borderRadius: 10,
-        backgroundColor: '#03223f',
+        backgroundColor: 'white'
     },
     ViewInput: {
         paddingVertical: 5,
@@ -183,7 +222,6 @@ const styles = StyleSheet.create({
     showTextDateTime: {
         marginBottom: 20,
         fontSize: 16,
-        color: '#5FFAC9',
         textAlign: 'center',
     },
     ToDoInput: {
@@ -193,28 +231,28 @@ const styles = StyleSheet.create({
     },
     inputTitle: {
         fontSize: 14,
-        color: 'goldenrod',        
+        color: 'black',
     },
     DateTimeView: {
         flexDirection: 'row', 
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
     },
     DateTimeButton: {
         alignItems: 'center',
-        justifyContent: 'center',
         paddingVertical: 12,
         width: 50,
         borderRadius: 4,
-        elevation: 10,
+        elevation: 5,
         backgroundColor: 'white',
-        },
+        marginBottom: 10,
+    },
     DateTimeText: {
         fontSize: 16,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'black',
+        color: 'white',
     },
     sendButton: {
         alignItems: 'center',
@@ -225,7 +263,8 @@ const styles = StyleSheet.create({
         elevation: 10,
         backgroundColor: 'white',
         borderColor: 'black',
-        display: 'flex'
+        display: 'flex',
+        marginBottom: 10,
     },
     sendText: {
         fontSize: 16,
